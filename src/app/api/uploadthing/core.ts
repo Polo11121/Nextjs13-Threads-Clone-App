@@ -1,5 +1,6 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { currentUser } from "@clerk/nextjs";
+
 const f = createUploadthing();
 
 const auth = async () => await currentUser();

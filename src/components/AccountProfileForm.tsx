@@ -9,6 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/Form";
 import { Input } from "@/components/ui/Input";
 import { useForm } from "react-hook-form";
@@ -16,6 +17,8 @@ import { UserValidator, UserValidatorType } from "@/lib/validators/user";
 import { Textarea } from "@/components/ui/Textarea";
 import { isBase64Image } from "@/lib/utils";
 import { useUploadThing } from "@/lib/useUploadThing";
+import { updateUser } from "@/lib/actions/user.actions";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 
 interface AccountProfileFormProps {
@@ -36,6 +39,8 @@ export const AccountProfileForm = ({
 }: AccountProfileFormProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
+  const router = useRouter();
+  const pathname = usePathname();
 
   const form = useForm<UserValidatorType>({
     resolver: zodResolver(UserValidator),
@@ -83,6 +88,18 @@ export const AccountProfileForm = ({
         form.setValue("profile_photo", imgRes[0].url);
       }
     }
+
+    await updateUser({
+      userId: user.id,
+      pathname,
+      ...values,
+    });
+
+    if (pathname === "/profile/edit") {
+      router.back();
+    } else {
+      router.push("/");
+    }
   };
 
   return (
@@ -126,6 +143,7 @@ export const AccountProfileForm = ({
                   onChange={uploadHandler}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -140,6 +158,7 @@ export const AccountProfileForm = ({
               <FormControl>
                 <Input className="account-form_input no-focus" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -154,6 +173,7 @@ export const AccountProfileForm = ({
               <FormControl>
                 <Input className="account-form_input no-focus" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -172,11 +192,15 @@ export const AccountProfileForm = ({
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
-        <Button className="bg-primary-500" type="submit">
-          Submit
+        <Button
+          className="bg-primary-500 hover:bg-primary-500 hover:opacity-80"
+          type="submit"
+        >
+          {buttonText}
         </Button>
       </form>
     </Form>

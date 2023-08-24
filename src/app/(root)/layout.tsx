@@ -6,6 +6,9 @@ import { Navbar } from "@/components/Navbar";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { RightSidebar } from "@/components/RightSidebar";
 import { Footer } from "@/components/Footer";
+import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+import { fetchUser } from "@/lib/actions/user.actions";
 import "@/app/globals.css";
 
 interface RootLayoutProps {
@@ -19,7 +22,23 @@ export const metadata: Metadata = {
   description: "A Next.js 13 Meta Threads Application",
 };
 
-const RootLayout = ({ children }: RootLayoutProps) => {
+const RootLayout = async ({ children }: RootLayoutProps) => {
+  const user = await currentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const userInfo = await fetchUser(user.id);
+
+  if (!userInfo) {
+    return null;
+  }
+
+  if (!userInfo.onboarded) {
+    redirect("/onboarding");
+  }
+
   return (
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
