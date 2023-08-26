@@ -47,8 +47,6 @@ export const CreateCommentForm = ({
       text: values.text,
       pathname,
     });
-
-    router.push("/");
   };
 
   return (

@@ -26,16 +26,12 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
   const user = await currentUser();
 
   if (!user) {
-    return null;
+    redirect("/");
   }
 
   const userInfo = await fetchUser(user.id);
 
-  if (!userInfo) {
-    return null;
-  }
-
-  if (!userInfo.onboarded) {
+  if (!userInfo?.onboarded) {
     redirect("/onboarding");
   }
 
