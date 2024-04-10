@@ -36,7 +36,6 @@ export const CreateThreadForm = ({ userId }: CreateThreadFormProps) => {
     await createThread({
       ...values,
       pathname,
-      communityId: null,
     });
 
     router.push("/");

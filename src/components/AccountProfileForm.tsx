@@ -24,8 +24,8 @@ import Image from "next/image";
 interface AccountProfileFormProps {
   user: {
     id: string;
-    objectId: string;
-    username: string;
+    objectId?: string;
+    username: string | null;
     name: string;
     bio: string;
     image: string;

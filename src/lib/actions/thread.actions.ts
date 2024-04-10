@@ -7,7 +7,6 @@ import Thread from "@/lib/models/thread.model";
 import User from "@/lib/models/user.model";
 
 interface CreateUserParams extends ThreadValidatorType {
-  communityId: string;
   pathname: string;
 }
 
@@ -108,7 +107,6 @@ export const fetchThreads = async (pageNumber = 1, pageSize = 20) => {
 export const createThread = async ({
   text,
   author,
-  communityId,
   pathname,
 }: CreateUserParams) => {
   try {
